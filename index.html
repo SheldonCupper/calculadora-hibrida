@@ -42,7 +42,7 @@
         @media print {
             body {
                 font-size: 10px;
-                -webkit-print-color-adjust: exact; /* Força a impressão de cores de fundo no Chrome */
+                -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
             #exportable-content {
@@ -58,11 +58,9 @@
                 font-size: 1.2rem !important;
                 margin-bottom: 0.5rem !important;
             }
-            /* Esconde os botões no PDF */
             #addItemBtn, #clearAllBtn, #exportPdfBtn, .remove-btn {
                 display: none !important;
             }
-            /* Reduz o padding dos cards */
             .bg-gray-900 {
                 padding: 0.75rem !important;
             }
@@ -165,8 +163,8 @@
                     <div class="mb-2">
                          <label for="batterySelector" class="text-sm font-medium text-gray-400 block mb-2">Selecione a Bateria:</label>
                          <select id="batterySelector" class="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-sm focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition">
-                            <option value="SG5.1">SG5.1</option>
-                            <option value="UNICOBA">UNICOBA</option>
+                             <option value="SG5.1">SG5.1</option>
+                             <option value="UNICOBA">UNICOBA</option>
                          </select>
                     </div>
                     <div class="flex justify-between items-baseline">
@@ -179,9 +177,9 @@
                     </div>
                     <hr class="border-gray-700 my-2">
                      <div class="bg-yellow-500/10 border-2 border-yellow-500 p-4 rounded-lg mt-auto text-center">
-                        <span class="text-base text-yellow-300 block mb-2">Baterias Necessárias:</span>
-                        <span id="batteriesResult" class="font-bold text-5xl text-white block">0</span>
-                    </div>
+                         <span class="text-base text-yellow-300 block mb-2">Baterias Necessárias:</span>
+                         <span id="batteriesResult" class="font-bold text-5xl text-white block">0</span>
+                     </div>
                 </div>
             </div>
 
@@ -189,17 +187,13 @@
             <div>
                 <h2 class="text-2xl font-bold text-green-400 mb-4 mt-20">Geração</h2>
                 <div class="bg-gray-900 p-6 rounded-lg space-y-4 shadow-inner">
-                    <div class="flex justify-between items-center">
-                        <label class="text-gray-400">Potência por Bateria (90%):</label>
-                        <span class="font-bold text-lg text-white">4,608 kWh</span>
-                    </div>
-                    <div class="flex justify-between items-center">
+                     <div class="flex justify-between items-center">
                         <label for="batteryQuantity" class="text-gray-400">Quantidade de Baterias:</label>
-                        <input type="number" id="batteryQuantity" value="1" min="0" class="w-24 bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                        <input type="number" id="batteryQuantity" value="0" min="0" class="w-24 bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition">
                     </div>
                     <div class="flex justify-between items-center">
-                        <label class="text-gray-400">Potência Total 90% (kWh):</label>
-                        <span id="totalBatteryPower90" class="font-bold text-lg text-white">4,61</span>
+                        <label class="text-gray-400">Potência Total Bateria:</label>
+                        <span id="totalBatteryPower" class="font-bold text-lg text-white">0,00</span>
                     </div>
                     <hr class="border-gray-700">
                     <div class="text-center pt-2">
@@ -223,6 +217,7 @@
         const batterySelector = document.getElementById('batterySelector');
         const networkSelector = document.getElementById('networkSelector');
 
+        // Configuração das baterias
         const batteryTypes = {
             'SG5.1': { name: 'SG5.1', voltage: 51.2, dod: 0.8, fc: 0.87, capacityAh: 100 },
             'UNICOBA': { name: 'UNICOBA', voltage: 48, dod: 0.8, fc: 0.87, capacityAh: 100 }
@@ -235,27 +230,38 @@
 
         // --- HYBRID CALCULATOR ---
         function initializeHybrid() {
+            // Adiciona listeners para os botões e inputs
             addItemBtn.addEventListener('click', addNewItem);
             clearAllBtn.addEventListener('click', clearAll);
             exportPdfBtn.addEventListener('click', exportToPDF);
             batteryQuantityInput.addEventListener('input', calculate);
             batterySelector.addEventListener('change', calculate);
             networkSelector.addEventListener('change', calculate);
+            
+            // Adiciona o primeiro item automaticamente
             addNewItem();
         }
 
+        /**
+         * Exporta o conteúdo para PDF.
+         * Usa a biblioteca html2pdf.js.
+         */
         function exportToPDF() {
             const element = document.getElementById('exportable-content');
             const opt = {
-                margin:       0.2,
-                filename:     'dimensionamento_hibrido.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, backgroundColor: '#2d3748', useCORS: true },
-                jsPDF:        { unit: 'px', format: [1080, 1080], orientation: 'portrait' }
+                margin: 0.5,
+                filename: 'dimensionamento_hibrido.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#2d3748', useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
-            html2pdf().from(element).set(opt).save();
+            html2pdf().set(opt).from(element).save();
         }
 
+        /**
+         * Cria e retorna um novo item de consumo.
+         * @param {object} item - Objeto com os dados iniciais do item.
+         */
         function createConsumptionItem(item) {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'consumption-item grid grid-cols-12 gap-2 items-stretch bg-gray-800 p-2 rounded-md';
@@ -286,6 +292,9 @@
             return itemDiv;
         }
         
+        /**
+         * Adiciona um novo item de consumo à lista.
+         */
         function addNewItem() {
             const newItem = { description: "", quantity: 1, power: 0, hours: 0, minutes: 0, days: 7 };
             const newItemElement = createConsumptionItem(newItem);
@@ -294,11 +303,17 @@
             calculate();
         }
         
+        /**
+         * Limpa todos os itens da lista de consumo.
+         */
         function clearAll() {
             consumptionListContainer.innerHTML = '';
             calculate();
         }
 
+        /**
+         * Função principal de cálculo, acionada em cada alteração.
+         */
         function calculate() {
             let totalAverageDailyConsumptionKwh = 0;
             let peakPowerDemandW = 0;
@@ -306,45 +321,59 @@
             const formattingOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
             const items = document.querySelectorAll('.consumption-item');
 
+            // 1. Calcula o consumo de cada item e o total
             items.forEach(item => {
                 const quantity = parseFloat(item.querySelector('.quantity-input').value) || 0;
                 const power = parseFloat(item.querySelector('.power-input').value) || 0;
                 const hours = parseFloat(item.querySelector('.hours-input').value) || 0;
                 const minutes = parseFloat(item.querySelector('.minutes-input').value) || 0;
                 const daysPerWeek = parseFloat(item.querySelector('.days-input').value) || 0;
+                
+                // Potência de pico é a soma das potências de todos os equipamentos
                 peakPowerDemandW += quantity * power;
+
+                // Converte tempo para horas decimais
                 const totalHoursPerDayOfUse = hours + (minutes / 60);
+
+                // Cálculo do consumo semanal em kWh
                 const weeklyKwh = quantity * (power / 1000) * totalHoursPerDayOfUse * daysPerWeek;
+                // Cálculo do consumo diário médio em kWh
                 const averageDailyKwh = weeklyKwh / 7;
                 totalAverageDailyConsumptionKwh += averageDailyKwh;
+
+                // Atualiza o display do item
                 item.querySelector('.daily-kwh').textContent = averageDailyKwh.toLocaleString(locale, formattingOptions);
             });
             
+            // 2. Exibe os resultados totais de consumo
             const totalMonthlyConsumption = totalAverageDailyConsumptionKwh * 30;
             document.getElementById('peakPowerW').textContent = `${peakPowerDemandW.toLocaleString(locale)} W`;
             document.getElementById('totalDailyKwh').textContent = `${totalAverageDailyConsumptionKwh.toLocaleString(locale, formattingOptions)} kWh/dia`;
             document.getElementById('totalMonthlyKwh').textContent = `${totalMonthlyConsumption.toLocaleString(locale, formattingOptions)} kWh/mês`;
             
+            // 3. Dimensiona o banco de baterias
             const selectedBatteryKey = batterySelector.value;
             const selectedBattery = batteryTypes[selectedBatteryKey];
             const correctedLoadKWh = totalAverageDailyConsumptionKwh / (selectedBattery.dod * selectedBattery.fc);
             const requiredAh = (correctedLoadKWh * 1000) / selectedBattery.voltage;
             const requiredBatteries = requiredAh > 0 ? Math.ceil(requiredAh / selectedBattery.capacityAh) : 0;
+            
             document.getElementById('correctedLoadResult').textContent = `${correctedLoadKWh.toLocaleString(locale, formattingOptions)} kWh/dia`;
             document.getElementById('totalAhResult').textContent = `${Math.ceil(requiredAh).toLocaleString(locale)} Ah/dia`;
             document.getElementById('batteriesResult').textContent = requiredBatteries;
             
-            batteryQuantityInput.value = requiredBatteries;
-
-            const batteryPower90Kwh = 4.608;
+            // 4. Calcula a geração necessária e potência total das baterias
             const batteryQuantity = parseFloat(batteryQuantityInput.value) || 0;
-            const totalBatteryPower90 = batteryPower90Kwh * batteryQuantity;
-            const requiredGeneration = totalMonthlyConsumption + (30 * totalBatteryPower90);
-            document.getElementById('totalBatteryPower90').textContent = totalBatteryPower90.toLocaleString(locale, formattingOptions);
+            const batteryPower90Kwh = (selectedBattery.voltage * selectedBattery.capacityAh * selectedBattery.dod) / 1000;
+            const totalBatteryPower = batteryPower90Kwh * batteryQuantity;
+            const requiredGeneration = (totalAverageDailyConsumptionKwh + totalBatteryPower) * 30;
+
+            document.getElementById('totalBatteryPower').textContent = `${totalBatteryPower.toLocaleString(locale, formattingOptions)} kWh`;
             document.getElementById('requiredGeneration').textContent = requiredGeneration.toLocaleString(locale, formattingOptions);
 
-            const powerPerBatteryW = 2560; 
-            const batteryDischargePowerW = requiredBatteries * powerPerBatteryW;
+            // 5. Recomenda o inversor
+            const powerPerBatteryW = 2560;
+            const batteryDischargePowerW = batteryQuantity * powerPerBatteryW;
             const totalPowerDemandW = Math.max(peakPowerDemandW, batteryDischargePowerW);
             const selectedNetwork = networkSelector.value;
             
@@ -359,7 +388,7 @@
                 { name: 'TRIFÁSICO 12K - EU', power: 12000, type: 'tri', group: 'EU_TRI' }
             ];
             
-            inverterListContainer.innerHTML = ''; 
+            inverterListContainer.innerHTML = '';
 
             if (!selectedNetwork) {
                 inverterListContainer.innerHTML = `<div class="flex items-center justify-center h-full"><p class="text-center text-gray-500 p-4">Selecione a Tensão da Rede.</p></div>`;
