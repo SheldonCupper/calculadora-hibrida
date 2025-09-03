@@ -82,8 +82,8 @@
         <div class="xl:col-span-6">
             <h1 class="text-2xl sm:text-3xl font-bold text-cyan-400 mb-4">Dimensionamento de Consumo</h1>
             <div class="bg-gray-900 rounded-lg p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
-                <!-- Cabeçalho da Tabela -->
-                <div class="grid grid-cols-12 gap-2 font-semibold text-gray-400 px-2 pb-2 border-b border-gray-700 sticky top-0 bg-gray-900 z-10 text-xs sm:text-sm">
+                <!-- Cabeçalho da Tabela - Escondido no celular -->
+                <div class="hidden md:grid grid-cols-12 gap-2 font-semibold text-gray-400 px-2 pb-2 border-b border-gray-700 sticky top-0 bg-gray-900 z-10 text-xs sm:text-sm">
                     <div class="col-span-3">Equipamento</div>
                     <div class="col-span-1 text-center">Qtd.</div>
                     <div class="col-span-2 text-center">Potência (W)</div>
@@ -293,23 +293,39 @@
          */
         function createConsumptionItem(item) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'consumption-item grid grid-cols-12 gap-2 items-stretch bg-gray-800 p-3 rounded-md';
+            itemDiv.className = 'consumption-item flex flex-col space-y-2 md:grid md:grid-cols-12 md:gap-2 items-stretch bg-gray-800 p-3 rounded-md';
             let daysOptions = '';
             for (let i = 1; i <= 7; i++) {
                 daysOptions += `<option value="${i}" ${item.days == i ? 'selected' : ''}>${i} dia${i > 1 ? 's' : ''}</option>`;
             }
             itemDiv.innerHTML = `
-                <div class="col-span-3"><input type="text" value="${item.description}" class="description-input w-full h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="Ex: Geladeira"></div>
-                <div class="col-span-1"><input type="number" value="${item.quantity}" min="1" class="quantity-input w-full h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition"></div>
-                <div class="col-span-2"><input type="number" value="${item.power}" min="0" class="power-input w-full h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="W"></div>
-                <div class="col-span-2 flex gap-1">
-                    <input type="number" value="${item.hours}" min="0" max="23" class="hours-input w-1/2 h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="h">
-                    <input type="number" value="${item.minutes}" min="0" max="59" class="minutes-input w-1/2 h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="m">
+                <div class="flex flex-col md:col-span-3">
+                    <label class="text-xs text-gray-400 md:hidden">Equipamento</label>
+                    <input type="text" value="${item.description}" class="description-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="Ex: Geladeira">
                 </div>
-                <div class="col-span-2"><select class="days-input w-full h-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition">${daysOptions}</select></div>
-                <div class="col-span-2 relative">
+                <div class="flex flex-col md:col-span-1">
+                    <label class="text-xs text-gray-400 md:hidden">Qtd.</label>
+                    <input type="number" value="${item.quantity}" min="1" class="quantity-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition">
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="text-xs text-gray-400 md:hidden">Potência (W)</label>
+                    <input type="number" value="${item.power}" min="0" class="power-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="W">
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="text-xs text-gray-400 md:hidden">Tempo (h:m)</label>
+                    <div class="flex gap-1 w-full">
+                        <input type="number" value="${item.hours}" min="0" max="23" class="hours-input w-1/2 bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="h">
+                        <input type="number" value="${item.minutes}" min="0" max="59" class="minutes-input w-1/2 bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="m">
+                    </div>
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="text-xs text-gray-400 md:hidden">Dias/Semana</label>
+                    <select class="days-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-center text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition">${daysOptions}</select>
+                </div>
+                <div class="flex flex-col md:col-span-2 relative">
+                    <label class="text-xs text-gray-400 md:hidden">Média (kWh/dia)</label>
                     <div class="output-field daily-kwh">0.00</div>
-                    <button class="remove-btn absolute -top-2 -right-2 text-red-500 hover:text-red-400 transition-colors p-1 rounded-full bg-gray-700 hover:bg-gray-600">
+                    <button class="remove-btn absolute top-1 -right-1 text-red-500 hover:text-red-400 transition-colors p-1 rounded-full bg-gray-700 hover:bg-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>`;
