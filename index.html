@@ -92,7 +92,7 @@
                     <div class="col-span-2 text-center">Média (kWh/dia)</div>
                 </div>
                 <!-- Container da Lista de Itens -->
-                <div id="consumption-list" class="space-y-2 mt-2">
+                <div id="consumption-list" class="space-y-3 mt-2">
                     <!-- Itens serão inseridos aqui pelo JavaScript -->
                 </div>
             </div>
@@ -108,7 +108,7 @@
         </div>
 
         <!-- Coluna de Resultados 1 -->
-        <div class="xl:col-span-3 flex flex-col justify-start space-y-8">
+        <div class="xl:col-span-3 flex flex-col justify-start space-y-8 mt-8 xl:mt-0">
             <!-- SEÇÃO REDE DE LOAD -->
             <div>
                 <h2 class="text-2xl font-bold text-indigo-400 mb-4">Rede de Load</h2>
@@ -155,7 +155,7 @@
         </div>
 
         <!-- Coluna de Resultados 2 -->
-        <div class="xl:col-span-3 flex flex-col justify-start space-y-8">
+        <div class="xl:col-span-3 flex flex-col justify-start space-y-8 mt-8 xl:mt-0">
             <!-- SEÇÃO DIMENSIONAMENTO DE BATERIAS -->
             <div>
                 <h2 class="text-2xl font-bold text-yellow-400 mb-4">Baterias</h2>
@@ -264,7 +264,7 @@
          */
         function createConsumptionItem(item) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'consumption-item grid grid-cols-12 gap-2 items-stretch bg-gray-800 p-2 rounded-md';
+            itemDiv.className = 'consumption-item grid grid-cols-12 gap-2 items-stretch bg-gray-800 p-3 rounded-md';
             let daysOptions = '';
             for (let i = 1; i <= 7; i++) {
                 daysOptions += `<option value="${i}" ${item.days == i ? 'selected' : ''}>${i} dia${i > 1 ? 's' : ''}</option>`;
