@@ -96,14 +96,8 @@
                     <!-- Itens serão inseridos aqui pelo JavaScript -->
                 </div>
             </div>
-             <button id="addItemBtn" class="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
+            <button id="addItemBtn" class="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
                 Adicionar Novo Item
-            </button>
-            <button id="clearAllBtn" class="mt-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
-                Limpar Tudo
-            </button>
-            <button id="exportPdfBtn" class="mt-2 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
-                Exportar para PDF
             </button>
         </div>
 
@@ -219,6 +213,15 @@
                 </div>
             </div>
 
+            <!-- Botões de Limpar e Exportar -->
+            <div class="mt-2 space-y-2">
+                <button id="clearAllBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
+                    Limpar Tudo
+                </button>
+                <button id="exportPdfBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-base">
+                    Exportar para PDF
+                </button>
+            </div>
         </div>
     </div>
 
@@ -407,6 +410,9 @@
             document.getElementById('totalAhResult').textContent = `${Math.ceil(requiredAh).toLocaleString(locale)} Ah/dia`;
             document.getElementById('batteriesResult').textContent = requiredBatteries;
             
+            // Atualiza o campo de quantidade de baterias na seção de Geração
+            batteryQuantityInput.value = requiredBatteries;
+
             // 4. Calcula a geração necessária e potência total das baterias
             const batteryQuantity = parseFloat(batteryQuantityInput.value) || 0;
             const batteryPower90Kwh = (selectedBattery.voltage * selectedBattery.capacityAh * selectedBattery.dod) / 1000;
