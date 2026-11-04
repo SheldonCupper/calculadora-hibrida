@@ -304,7 +304,7 @@
             itemDiv.innerHTML = `
                 <div class="flex flex-col md:col-span-3">
                     <label class="text-xs text-gray-400 md:hidden">Equipamento</label>
-                    <input type="text" value="${item.description}" class="description-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="Ex: Geladeira">
+                    <input type="text" value="" class="description-input w-full bg-gray-700 text-white border border-gray-600 rounded-md p-2 text-sm focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition" placeholder="Ex: Geladeira">
                 </div>
                 <div class="flex flex-col md:col-span-1">
                     <label class="text-xs text-gray-400 md:hidden">Qtd.</label>
@@ -332,7 +332,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>`;
-            itemDiv.querySelectorAll('input, select').forEach(input => input.addEventListener('input', calculate));
+            itemDiv.querySelector('.description-input').value = String(item.description ?? '');
+             itemDiv.querySelectorAll('input, select').forEach(input => input.addEventListener('input', calculate));
             itemDiv.querySelector('.remove-btn').addEventListener('click', () => {
                 itemDiv.remove();
                 calculate();
@@ -371,11 +372,11 @@
 
             // 1. Calcula o consumo de cada item e o total
             items.forEach(item => {
-                const quantity = parseFloat(item.querySelector('.quantity-input').value) || 0;
-                const power = parseFloat(item.querySelector('.power-input').value) || 0;
-                const hours = parseFloat(item.querySelector('.hours-input').value) || 0;
-                const minutes = parseFloat(item.querySelector('.minutes-input').value) || 0;
-                const daysPerWeek = parseFloat(item.querySelector('.days-input').value) || 0;
+                const quantity = Math.max(0, Number(item.querySelector('.quantity-input').value) || 0);
+                const power = Math.max(0, Number(item.querySelector('.power-input').value) || 0);
+                const hours = Math.max(0, Math.min(24, Number(item.querySelector('.hours-input').value) || 0));
+                const minutes = Math.max(0, Math.min(59, Number(item.querySelector('.minutes-input').value) || 0));
+                const daysPerWeek = Math.max(0, Math.min(7, Number(item.querySelector('.days-input').value) || 0));
                 
                 // Potência de pico é a soma das potências de todos os equipamentos
                 peakPowerDemandW += quantity * power;
