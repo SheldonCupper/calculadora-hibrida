@@ -8,6 +8,8 @@ Ferramenta web de **dimensionamento preliminar de consumo e componentes para sis
 - Apresentação dos resultados de consumo.
 - Áreas para recomendação de inversor, baterias e geração.
 
+**[🚀 Abrir demonstração online](https://sheldoncupper.github.io/calculadora-hibrida/)**
+
 ## Executar
 
 Abra `index.html` no navegador. É necessário acesso à internet para os recursos externos da interface.
